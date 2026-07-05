@@ -1,0 +1,327 @@
+/* ── Google Fonts ────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── CSS Custom Properties ───────────────────────────────────────────────── */
+:root {
+  --clr-bg-1:      #0a0a0f;
+  --clr-bg-2:      #0f0f1a;
+  --clr-surface:   rgba(255, 255, 255, 0.04);
+  --clr-border:    rgba(255, 255, 255, 0.08);
+  --clr-border-h:  rgba(255, 255, 255, 0.16);
+
+  --clr-purple-1:  #7c3aed;
+  --clr-purple-2:  #a855f7;
+  --clr-blue-1:    #3b82f6;
+  --clr-blue-2:    #60a5fa;
+  --clr-green-1:   #10b981;
+  --clr-green-2:   #34d399;
+  --clr-red-1:     #ef4444;
+  --clr-amber:     #f59e0b;
+
+  --clr-text:      #f1f5f9;
+  --clr-muted:     #94a3b8;
+  --clr-faint:     #475569;
+
+  --grad-title:    linear-gradient(135deg, #a855f7 0%, #60a5fa 100%);
+  --grad-btn:      linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  --grad-btn-h:    linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
+  --grad-success:  linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  --grad-bg:       radial-gradient(ellipse 80% 60% at 50% -10%,
+                     rgba(124, 58, 237, 0.18) 0%, transparent 70%),
+                   radial-gradient(ellipse 60% 40% at 90% 80%,
+                     rgba(59, 130, 246, 0.12) 0%, transparent 60%);
+
+  --radius-card:   1.5rem;
+  --radius-input:  0.75rem;
+  --radius-btn:    0.75rem;
+  --radius-badge:  999px;
+
+  --shadow-card:   0 25px 50px -12px rgba(0, 0, 0, 0.6),
+                   0 0 0 1px var(--clr-border);
+  --shadow-btn:    0 4px 24px -4px rgba(124, 58, 237, 0.45);
+  --shadow-btn-h:  0 8px 32px -4px rgba(124, 58, 237, 0.65);
+
+  --transition:    0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--clr-bg-1);
+  background-image: var(--grad-bg);
+  color: var(--clr-text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--clr-surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Card header ─────────────────────────────────────────────────────────── */
+.card__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
+  background: var(--grad-btn);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+  box-shadow: var(--shadow-btn);
+}
+
+.logo-icon--success {
+  background: var(--grad-success);
+  box-shadow: 0 4px 24px -4px rgba(16, 185, 129, 0.5);
+}
+
+.card__title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: var(--grad-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.15;
+}
+
+.card--success .card__title {
+  background: var(--grad-success);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.arrow { opacity: 0.7; }
+
+.card__subtitle {
+  color: var(--clr-muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  max-width: 30ch;
+  text-align: center;
+}
+
+/* ── Alert ───────────────────────────────────────────────────────────────── */
+.alert {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  animation: fadeUp 0.25s ease both;
+}
+
+.alert--error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.alert__icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  margin-top: 0.05rem;
+}
+
+/* ── Form ────────────────────────────────────────────────────────────────── */
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--clr-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field__input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-input);
+  color: var(--clr-text);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color var(--transition), background var(--transition),
+              box-shadow var(--transition);
+}
+
+.field__input::placeholder { color: var(--clr-faint); }
+
+.field__input:focus {
+  border-color: var(--clr-purple-1);
+  background: rgba(124, 58, 237, 0.08);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.form__hint {
+  font-size: 0.8125rem;
+  color: var(--clr-faint);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-btn);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  transition: transform var(--transition), box-shadow var(--transition),
+              background var(--transition);
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--grad-btn);
+  color: #fff;
+  box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover {
+  background: var(--grad-btn-h);
+  box-shadow: var(--shadow-btn-h);
+  transform: translateY(-2px);
+}
+
+.btn--primary:active { transform: translateY(0); }
+
+.btn--download {
+  background: var(--grad-success);
+  box-shadow: 0 4px 24px -4px rgba(16, 185, 129, 0.4);
+}
+
+.btn--download:hover {
+  box-shadow: 0 8px 32px -4px rgba(16, 185, 129, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--clr-muted);
+  border: 1px solid var(--clr-border);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.btn--secondary:hover {
+  border-color: var(--clr-border-h);
+  color: var(--clr-text);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn__icon { font-size: 1.1em; }
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-badge);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: var(--clr-green-2);
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--clr-border);
+}
+
+/* ── Footer note ─────────────────────────────────────────────────────────── */
+.footer-note {
+  font-size: 0.8125rem;
+  color: var(--clr-faint);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .card { padding: 2rem 1.25rem; border-radius: 1.25rem; }
+  .card__title { font-size: 1.75rem; }
+}

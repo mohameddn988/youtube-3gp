@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: youtube-3gp-converter
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
