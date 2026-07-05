@@ -93,7 +93,7 @@ app.get('/', (req, res) => {
           >
         </div>
 
-        <p class="form__hint">Max 45 minutes &nbsp;·&nbsp; Audio only &nbsp;·&nbsp; 3GP / AAC 128 kbps</p>
+        <p class="form__hint">Max 45 minutes &nbsp;·&nbsp; Audio only &nbsp;·&nbsp; 3GP / AAC 64 kbps</p>
 
         <button class="btn btn--primary" type="submit" id="submit-btn" onclick="var b=this; setTimeout(function(){ b.disabled=true; b.style.opacity='0.6'; b.style.cursor='not-allowed'; b.innerHTML='Converting... ⏳'; }, 10)">
           <span class="btn__icon">⬇</span>
@@ -186,8 +186,8 @@ app.post('/convert', async (req, res) => {
       ffmpeg(inputFile)
         .noVideo()
         .audioCodec('aac')
-        .audioBitrate('128k')
-        .audioFrequency(44100)
+        .audioBitrate('64k')
+        .audioFrequency(22050)
         .audioChannels(1)
         .format('3gp')
         .on('end', resolve)
@@ -239,7 +239,7 @@ app.get('/ready', (req, res) => {
       <div class="badges">
         <span class="badge">3GP</span>
         <span class="badge">AAC Audio</span>
-        <span class="badge">128 kbps</span>
+        <span class="badge">64 kbps</span>
       </div>
 
       <a
