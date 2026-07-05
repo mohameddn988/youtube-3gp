@@ -95,7 +95,7 @@ app.get('/', (req, res) => {
 
         <p class="form__hint">Max 45 minutes &nbsp;·&nbsp; Audio only &nbsp;·&nbsp; 3GP / AAC 64 kbps</p>
 
-        <button class="btn btn--primary" type="submit" id="submit-btn" onclick="var b=this; setTimeout(function(){ b.disabled=true; b.style.opacity='0.6'; b.style.cursor='not-allowed'; b.innerHTML='Converting... ⏳'; }, 10)">
+        <button class="btn btn--primary" type="submit" id="submit-btn">
           <span class="btn__icon">⬇</span>
           Convert &amp; Download
         </button>

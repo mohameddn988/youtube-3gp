@@ -4,7 +4,7 @@
   "description": "Convert YouTube audio to 3GP for old phones — pure HTML, no client JavaScript",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "nodemon server.js"
   },
   "engines": {
