@@ -17,7 +17,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 const PORT          = process.env.PORT || 3000;
-const MAX_DURATION  = 600;           // 10 minutes in seconds
+const MAX_DURATION  = 2700;          // 45 minutes in seconds
 const FILE_TTL_MS   = 30 * 60 * 1000; // 30 minutes safety-net expiry
 
 // yt-dlp binary path (cross-platform)
@@ -93,7 +93,7 @@ app.get('/', (req, res) => {
           >
         </div>
 
-        <p class="form__hint">Max 10 minutes &nbsp;·&nbsp; Audio only &nbsp;·&nbsp; 3GP / AAC 64 kbps</p>
+        <p class="form__hint">Max 45 minutes &nbsp;·&nbsp; Audio only &nbsp;·&nbsp; 3GP / AAC 128 kbps</p>
 
         <button class="btn btn--primary" type="submit" id="submit-btn" onclick="var b=this; setTimeout(function(){ b.disabled=true; b.style.opacity='0.6'; b.style.cursor='not-allowed'; b.innerHTML='Converting... ⏳'; }, 10)">
           <span class="btn__icon">⬇</span>
@@ -146,7 +146,7 @@ app.post('/convert', async (req, res) => {
   // ── 3. Duration guard ─────────────────────────────────────────────────────
   if (info.duration > MAX_DURATION) {
     const mins = Math.ceil(info.duration / 60);
-    return bail(`Video is too long (${mins} min). Maximum is 10 minutes.`);
+    return bail(`Video is too long (${mins} min). Maximum is 45 minutes.`);
   }
 
   // ── 4. Prepare temp paths ─────────────────────────────────────────────────
@@ -159,7 +159,7 @@ app.post('/convert', async (req, res) => {
   try {
     await ytDlp.execPromise([
       rawUrl,
-      '-f', 'bestaudio',
+      '-f', 'worstaudio',
       '-o', `${inputBase}.%(ext)s`,
       '--no-playlist',
       '--quiet',
@@ -186,8 +186,8 @@ app.post('/convert', async (req, res) => {
       ffmpeg(inputFile)
         .noVideo()
         .audioCodec('aac')
-        .audioBitrate('64k')
-        .audioFrequency(22050)
+        .audioBitrate('128k')
+        .audioFrequency(44100)
         .audioChannels(1)
         .format('3gp')
         .on('end', resolve)
@@ -239,7 +239,7 @@ app.get('/ready', (req, res) => {
       <div class="badges">
         <span class="badge">3GP</span>
         <span class="badge">AAC Audio</span>
-        <span class="badge">64 kbps</span>
+        <span class="badge">128 kbps</span>
       </div>
 
       <a
