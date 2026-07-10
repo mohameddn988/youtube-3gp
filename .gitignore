@@ -2,3 +2,7 @@ node_modules/
 .env
 *.log
 npm-debug.log*
+
+# YouTube cookies — NEVER commit (session tokens = account takeover risk)
+cookies.txt
+*.cookies

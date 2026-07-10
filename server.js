@@ -26,6 +26,15 @@ const YT_DLP_BIN = path.join(
   process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp'
 );
 
+// yt-dlp cookies — bypasses YouTube "confirm you're not a bot" block on
+// datacenter IPs (Render, etc.). In production, mount cookies.txt as a Render
+// Secret File at /etc/secrets/cookies.txt, or set YT_COOKIES_PATH to override.
+// If the file is absent (e.g. localhost), we simply skip the flag.
+const COOKIES_PATH = process.env.YT_COOKIES_PATH || '/etc/secrets/cookies.txt';
+const COOKIES_ARGS = fs.existsSync(COOKIES_PATH)
+  ? ['--cookies', COOKIES_PATH]
+  : [];
+
 // ─── App ─────────────────────────────────────────────────────────────────────
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -137,7 +146,7 @@ app.post('/convert', async (req, res) => {
   // ── 2. Fetch metadata (no download) ───────────────────────────────────────
   let info;
   try {
-    info = await ytDlp.getVideoInfo(rawUrl);
+    info = await ytDlp.getVideoInfo([rawUrl, ...COOKIES_ARGS]);
   } catch (err) {
     console.error('getVideoInfo error:', err.message);
     return bail('Could not fetch video info. The video may be private, age-restricted, or unavailable.');
@@ -163,7 +172,8 @@ app.post('/convert', async (req, res) => {
       '-o', `${inputBase}.%(ext)s`,
       '--no-playlist',
       '--quiet',
-      '--no-warnings'
+      '--no-warnings',
+      ...COOKIES_ARGS
     ]);
   } catch (err) {
     console.error('yt-dlp download error:', err.message);
@@ -325,6 +335,13 @@ async function init() {
     // Ensure executable on Linux/macOS
     if (process.platform !== 'win32') {
       fs.chmodSync(YT_DLP_BIN, '755');
+    }
+
+    // Report cookie status so production logs make bot-block issues obvious
+    if (COOKIES_ARGS.length) {
+      console.log(`🍪 Using cookies from ${COOKIES_PATH}`);
+    } else {
+      console.log(`⚠️  No cookies file at ${COOKIES_PATH} — YouTube may block datacenter IPs.`);
     }
   } catch (err) {
     console.error('❌ Failed to initialise yt-dlp:', err.message);
