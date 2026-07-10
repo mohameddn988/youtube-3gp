@@ -30,10 +30,12 @@ const YT_DLP_BIN = path.join(
 // datacenter IPs (Render, etc.). In production, mount cookies.txt as a Render
 // Secret File at /etc/secrets/cookies.txt, or set YT_COOKIES_PATH to override.
 // If the file is absent (e.g. localhost), we simply skip the flag.
-const COOKIES_PATH = process.env.YT_COOKIES_PATH || '/etc/secrets/cookies.txt';
-const COOKIES_ARGS = fs.existsSync(COOKIES_PATH)
-  ? ['--cookies', COOKIES_PATH]
-  : [];
+// Render Secret Files are READ-ONLY. yt-dlp rewrites the cookie jar on exit,
+// so pointing --cookies straight at the secret crashes with EROFS. We copy the
+// secret to a writable tmp path during init() and point yt-dlp there instead.
+const COOKIES_SRC  = process.env.YT_COOKIES_PATH || '/etc/secrets/cookies.txt';
+const COOKIES_FILE = path.join(os.tmpdir(), 'yt_cookies.txt');
+let   COOKIES_ARGS = []; // populated in init() once the writable copy exists
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 const app = express();
@@ -337,11 +339,14 @@ async function init() {
       fs.chmodSync(YT_DLP_BIN, '755');
     }
 
-    // Report cookie status so production logs make bot-block issues obvious
-    if (COOKIES_ARGS.length) {
-      console.log(`🍪 Using cookies from ${COOKIES_PATH}`);
+    // Copy the read-only secret cookie file to a writable path so yt-dlp can
+    // rewrite the jar on exit without crashing (EROFS).
+    if (fs.existsSync(COOKIES_SRC)) {
+      fs.copyFileSync(COOKIES_SRC, COOKIES_FILE);
+      COOKIES_ARGS = ['--cookies', COOKIES_FILE];
+      console.log(`🍪 Cookies loaded → writable copy at ${COOKIES_FILE}`);
     } else {
-      console.log(`⚠️  No cookies file at ${COOKIES_PATH} — YouTube may block datacenter IPs.`);
+      console.log(`⚠️  No cookies file at ${COOKIES_SRC} — YouTube may block datacenter IPs.`);
     }
   } catch (err) {
     console.error('❌ Failed to initialise yt-dlp:', err.message);
